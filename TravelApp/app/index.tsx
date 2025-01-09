@@ -10,7 +10,6 @@ export default function Index() {
       }}
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>
-      <Text>Open App.tsx to start working on your app!</Text>
     </View>
   );
 }
