@@ -2,7 +2,7 @@ import { Colors } from '@/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation, useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { auth } from '../../../config/FirebaseConfig';
@@ -22,35 +22,52 @@ export default function SignUp() {
     })
   },[])// Execute only once
 
-  const OnCreateAccount = () => {
-
+  const OnCreateAccount = async () => { // Make the function async
     if (email === '' || password === '' || username === '') {
-
-      console.log('Please fill out all fields')
       Toast.show({
-        text1: 'Error',
-        text2: 'Please fill out all fields',
         type: 'error',
-        position: 'bottom',
+        text1: 'Missing fields',
+        text2: 'Please fill out all fields',
         visibilityTime: 4000,
-      })
+        position: 'bottom',
+        autoHide: true
+      });
       return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    console.log(user)
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode, errorMessage)
-    // ..
-  });
-  }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+
+      // Save user ID or any other necessary information to AsyncStorage
+      await AsyncStorage.setItem('userId', user.uid);
+
+      // Optionally navigate to another screen
+      // router.replace('/some-screen'); // Adjust the route as necessary
+
+      Toast.show({
+        type: 'success',
+        text1: 'Account Created',
+        text2: 'Your account was successfully created!',
+        visibilityTime: 4000,
+        position: 'bottom',
+        autoHide: true
+      });
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      Toast.show({
+        type: 'error',
+        text1: 'Signup Failed',
+        text2: errorMessage,
+        visibilityTime: 4000,
+        position: 'bottom',
+        autoHide: true
+      });
+    }
+  };
 
   return (
     <View style = {{
@@ -154,7 +171,7 @@ export default function SignUp() {
           Sign in
         </Text>
       </TouchableOpacity>
-
+      <Toast />
       </View>
   )
 }

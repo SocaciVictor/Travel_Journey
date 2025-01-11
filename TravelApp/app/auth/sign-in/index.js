@@ -1,8 +1,14 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { auth } from '../../../config/FirebaseConfig';
 import { Colors } from '../../../constants/Colors';
+
+
 
 export default function SignIn() {
   
@@ -14,6 +20,49 @@ export default function SignIn() {
       headerShown: false
     })
   },[]) // Execute only once
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onSignIn = async () => {
+    if (!email && !password) {
+      Toast.show({
+        type: 'error',
+        text1: 'Missing fields',
+        text2: 'Please Enter Email & Password',
+        visibilityTime: 4000,
+        position: 'bottom',
+        autoHide: true
+      });
+      return;
+    }
+  
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log(user);
+  
+      // Salvarea ID-ului utilizatorului în AsyncStorage
+      await AsyncStorage.setItem('userId', user.uid);
+  
+      // Navigația către ecranul principal după autentificare
+      router.replace('/mytrip');
+      // ...
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      Toast.show({
+        type: 'error',
+        text1: errorCode,
+        text2: errorMessage,
+        visibilityTime: 4000,
+        position: 'bottom',
+        autoHide: true
+      });
+    }
+  };
+  
 
   return (
     <View style = {{
@@ -62,6 +111,7 @@ export default function SignIn() {
         style = {styles.input}
          placeholder = 'Enter Email'
          placeholderTextColor={Colors.GRAY}
+         onChangeText={(value) => setEmail(value)}
          />
       </View>
 
@@ -79,10 +129,11 @@ export default function SignIn() {
         style = {styles.input}
         placeholder = 'Enter Password'
         placeholderTextColor={Colors.GRAY}
+        onChangeText={(value) => setPassword(value)}
         />
       </View>
 
-      <View style = {{
+      <TouchableOpacity onPress={onSignIn} style = {{
         padding: 20,
         backgroundColor: Colors.PRIMARY,
         borderRadius: 15,
@@ -95,7 +146,7 @@ export default function SignIn() {
         }}>
           Sign in
         </Text>
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity 
       onPress={() => router.replace('auth/sign-up')}
@@ -114,6 +165,7 @@ export default function SignIn() {
           Create Account
         </Text>
       </TouchableOpacity>
+      <Toast />
 
     </View>
   )

@@ -3,5 +3,8 @@
     "firebase": "^11.1.0",
     "react-native-root-toast": "^3.6.0",
     "react-native-toast-message": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.72.8"
   }
 }
