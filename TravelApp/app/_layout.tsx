@@ -1,5 +1,7 @@
 import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
+import React, { useState } from 'react';
+import { CreateTripContext } from "../context/CreateTripContext";
 
 export default function RootLayout() {
 
@@ -9,14 +11,18 @@ export default function RootLayout() {
     'monserrat-extra-bold': require('../assets/fonts/Montserrat-ExtraBold.ttf'),
   })
   
+  const [tripData, setTripData] = useState([]);
+
   return (
-    <Stack screenOptions={{
-      headerShown: false,
-    }}>
-      {/* <Stack.Screen name="index" options={{
-        headerShown: false,
-      }}/> */}
-      <Stack.Screen name="(tabs)"/>
-    </Stack>
+    <CreateTripContext.Provider value={{tripData, setTripData}}>
+        <Stack screenOptions={{
+          headerShown: false,
+        }}>
+          {/* <Stack.Screen name="index" options={{
+            headerShown: false,
+          }}/> */}
+          <Stack.Screen name="(tabs)"/>
+        </Stack>
+    </CreateTripContext.Provider>
   );
 }
