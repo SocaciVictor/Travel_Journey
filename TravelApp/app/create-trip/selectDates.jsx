@@ -1,10 +1,12 @@
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import CalendarPicker from "react-native-calendar-picker";
 import Toast from 'react-native-toast-message';
 import { Colors } from '../../constants/Colors';
+import { CreateTripContext } from '../../context/CreateTripContext';
+
 
 
 export default function SelectDates() {
@@ -14,6 +16,8 @@ export default function SelectDates() {
     const [selectedEndDate, setSelectedEndDate] = useState();
     const [startDate,setStartDate] = useState();
     const [endDate,setEndDate] = useState();
+    const { tripData, setTripData } = useContext(CreateTripContext);
+    const router=useRouter();
 
     const onDateChange = (date, type) => {
         if (type === 'END_DATE') {
@@ -31,10 +35,10 @@ export default function SelectDates() {
     };
 
     const OnDateSelectionContinue =() =>{
-        if (!startDate&&!endDate){
+        if (!startDate||!endDate){
             Toast.show({
                      type: 'error',
-                     text1: 'Missing fields',
+                     text1: 'Missing dates',
                      text2: 'Please select start and end date',
                      visibilityTime: 4000,
                      position: 'bottom',
@@ -44,7 +48,15 @@ export default function SelectDates() {
             return;
         }
         const totalNoOfDays = endDate.diff(startDate,'days');
-        console.log(totalNoOfDays);
+        console.log(totalNoOfDays+1);
+        setTripData({
+            ...tripData,
+            startDate: startDate,
+            endDate: endDate,
+            totalNoOfDays: totalNoOfDays+1,
+        })
+
+        router.push('/create-trip/selectBudget');
     }
     
     useEffect(()=>{
@@ -112,8 +124,8 @@ export default function SelectDates() {
                          Continue
                      </Text>
                      {/* </Link> */}
-                 </TouchableOpacity>            
-
+        </TouchableOpacity>            
+        <Toast />
     </View>
   )
 }

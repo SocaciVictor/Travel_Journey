@@ -58,7 +58,7 @@ export default function SelectTraveler() {
                         <TouchableOpacity onPress={()=>setSelectedTraveler(item)} style={{
                             marginVertical: 10,
                         }}>
-                            <OptionCard option={item} selectedTraveler={selectedTraveler}/>
+                            <OptionCard option={item} selectedOption={selectedTraveler}/>
                         </TouchableOpacity>
                     )}
                     keyExtractor={item => item.id.toString()} 
@@ -91,7 +91,7 @@ export default function SelectTraveler() {
                 </Text>
                 </Link>
             </TouchableOpacity>            
-
+              
         </View>
     );
 }

@@ -33,3 +33,24 @@ export const SelectTravelesList=[
         
     },
 ]
+
+export const SelectBudgetOptions=[
+    {
+        id: 1,
+        title:'Cheap',
+        description:'Budget friendly trips',
+        icon:'💰',
+    },
+    {
+        id: 2,
+        title:'Moderate',
+        description:'Not too expensive, not too cheap',
+        icon:'💸',
+    },
+    {
+        id: 3,
+        title:'Expensive',
+        description:'Money is no object',
+        icon:'💎',
+    },
+]
