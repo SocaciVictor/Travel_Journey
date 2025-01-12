@@ -1,12 +1,36 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import React, { useState } from 'react';
-import { Text, View } from 'react-native';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import StartNewTripCard from '../../components/MyTrips/StartNewTripCard';
+import UserTripList from '../../components/MyTrips/UserTripList';
+import { auth, db } from '../../config/FirebaseConfig';
 import { Colors } from '../../constants/Colors';
 
 export default function MyTrip() {
 
   const [userTrips, setUserTrips] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const user=auth.currentUser;
+
+
+  useEffect(() => {
+    user&&GetMyTrips();
+  }, []);
+
+  const GetMyTrips=async()=>{
+    setLoading(true);
+    setUserTrips([]);
+    const q=query(collection(db, "UserTrips"), where("userEmail", "==", user?.email));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+      setUserTrips(prev=>[...prev,doc.data()]);
+    });
+    setLoading(false);
+
+  }
   
   return (
     <View style={{
@@ -30,10 +54,11 @@ export default function MyTrip() {
         <AntDesign name="pluscircleo" size={35} color="black" />
       </View>
 
+      {loading&&<ActivityIndicator size={"large"} color={Colors.PRIMARY} />}
 
       {userTrips?.length == 0 ?
         <StartNewTripCard /> :
-        null
+        <UserTripList userTrips={userTrips} />
       }
     </View>
   )
