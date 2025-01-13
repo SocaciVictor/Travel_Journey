@@ -1,9 +1,10 @@
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, ScrollView, Text, View } from 'react-native';
 import FlightInfo from '../../components/TripDetails/FlightInfo';
 import HotelList from '../../components/TripDetails/HotelList';
+import PlannedTrip from '../../components/TripDetails/PlannedTrip';
 import { Colors } from '../../constants/Colors';
 
 export default function TripDetails() {
@@ -19,6 +20,7 @@ export default function TripDetails() {
     let endDate = tripDetails?.tripData ? moment(formatData(tripDetails.tripData).endDate).format('DD MMM YYYY') : undefined;
     let tripIcon = tripDetails?.tripData ? formatData(tripDetails.tripData).traveler.title : undefined;
     let tripBuget = tripDetails?.tripData ? formatData(tripDetails.tripData).budget : undefined;
+
     useEffect(() => {
         navigation.setOptions({
             headerShown: true,
@@ -40,7 +42,7 @@ export default function TripDetails() {
 
     
   return tripDetails&&(
-    <View>
+    <ScrollView>
         {imageUrl && (
             <Image
                 source={{ uri: imageUrl }}
@@ -99,10 +101,18 @@ export default function TripDetails() {
 
                 <FlightInfo flightData={tripDetails?.tripPlan?.travelPlan?.flightDetails} />
                 <HotelList hotelList={tripDetails?.tripPlan?.travelPlan?.hotelOptions} />
+                <Text style={{
+                    fontFamily: 'monserrat-extra-bold',
+                    fontSize: 20,
+                    marginTop: 20,
+                }}>
+                    🗺️ Plan Details
+                </Text>
+                <PlannedTrip itinerary={tripDetails?.tripPlan?.travelPlan?.dailyItinerary} />
         </View>
 
                 
 
-    </View>
+    </ScrollView>
   )
 }
