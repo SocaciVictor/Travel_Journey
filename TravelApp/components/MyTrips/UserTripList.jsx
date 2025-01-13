@@ -1,16 +1,16 @@
+import { useRouter } from 'expo-router';
 import moment from 'moment';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../constants/Colors';
 import UserTripCard from './UserTripCard';
 
+
 export default function UserTripList({userTrips}) {
 
     const LatestTrip=JSON.parse(userTrips[0].tripData);
-    
-    useEffect(() => {
-       console.log(LatestTrip?.locationInfo?.photoref)
-    })
+    const router = useRouter();
+
 
   return (
     <ScrollView>
@@ -69,7 +69,11 @@ export default function UserTripList({userTrips}) {
         </Text>
 
         </View>
-        <TouchableOpacity style={{
+        <TouchableOpacity
+         onPress={() => router.push({pathname:'/tripDetails',params:{
+                trip:JSON.stringify(userTrips[0])
+         }})}   
+         style={{
             backgroundColor: Colors.PRIMARY,
             padding: 15,
             borderRadius: 15,
