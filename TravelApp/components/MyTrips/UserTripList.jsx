@@ -11,6 +11,12 @@ export default function UserTripList({userTrips}) {
     const LatestTrip=JSON.parse(userTrips[0].tripData);
     const router = useRouter();
 
+    const handleUserTripClick=(trip)=>{
+        router.push({pathname:'/tripDetails',params:{
+            trip:JSON.stringify(trip)
+        }})
+    }
+
 
   return (
     <ScrollView>
@@ -91,7 +97,9 @@ export default function UserTripList({userTrips}) {
       </View>
 
       {userTrips.map((trip, index) => (
-         <UserTripCard key={index} trip={trip}>
+         <UserTripCard 
+         onPress={() => handleUserTripClick(trip)} 
+         key={index} trip={trip}>
 
          </UserTripCard>
       ))}

@@ -1,15 +1,17 @@
 import moment from 'moment';
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../constants/Colors';
 
-export default function UserTripCard({trip}) {
+export default function UserTripCard({trip, onPress}) {
 
     const formatData=(data)=>{
         return JSON.parse(data);
     }
   return (
-    <View style={{
+    <TouchableOpacity 
+    onPress={onPress}
+    style={{
         marginTop: 20,
         display: 'flex',
         flexDirection: 'row',
@@ -46,6 +48,6 @@ export default function UserTripCard({trip}) {
                 {formatData(trip.tripData).traveler.title}
             </Text>
         </View>
-    </View>
+    </TouchableOpacity>
   )
 }

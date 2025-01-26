@@ -1,4 +1,5 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { useRouter } from 'expo-router';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -11,6 +12,7 @@ export default function MyTrip() {
 
   const [userTrips, setUserTrips] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const user=auth.currentUser;
 
 
@@ -51,7 +53,10 @@ export default function MyTrip() {
         }}>
           My Trip
         </Text>
-        <AntDesign name="pluscircleo" size={35} color="black" />
+        <AntDesign name="pluscircleo" size={35} color="black"  
+          onPress={() => router.push('/create-trip/search-place')}
+        />
+        
       </View>
 
       {loading&&<ActivityIndicator size={"large"} color={Colors.PRIMARY} />}
